@@ -24,7 +24,7 @@ builder.Services.AddDbContext<ReceiptContext>((serviceProvider, options) =>
 builder.Services.AddSingleton<IOcrService>(sp =>
     new ClaudeOcrService(
         builder.Configuration["Claude:ApiKey"]!,
-        builder.Configuration["Claude:Model"] ?? Anthropic.SDK.Constants.AnthropicModels.Claude35Sonnet,
+        builder.Configuration["Claude:Model"] ?? Anthropic.SDK.Constants.AnthropicModels.Claude46Sonnet,
         sp.GetService<ILogger<ClaudeOcrService>>()));
 
 builder.Services.AddSingleton(sp =>
