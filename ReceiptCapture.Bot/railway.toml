@@ -1,0 +1,8 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.bot"
+
+[deploy]
+startCommand = "dotnet ReceiptCapture.Bot.dll"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
