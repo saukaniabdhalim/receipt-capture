@@ -17,5 +17,8 @@
     "CloudName": "YOUR-CLOUD-NAME",
     "ApiKey": "YOUR-CLOUDINARY-KEY",
     "ApiSecret": "YOUR-CLOUDINARY-SECRET"
+  },
+  "Telegram": {
+    "BotToken": "..."
   }
 }
