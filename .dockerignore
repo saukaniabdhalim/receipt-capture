@@ -1,0 +1,26 @@
+# Git
+.git/
+.gitignore
+
+# Build artifacts
+**/bin/
+**/obj/
+**/out/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Secrets
+**/appsettings.json
+**/appsettings.Development.json
+
+# Docker
+Dockerfile*
+docker-compose*
+.docker/
+
+# Test
+**/TestResults/
