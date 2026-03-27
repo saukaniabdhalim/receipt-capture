@@ -4,13 +4,13 @@ WORKDIR /src
 COPY ReceiptCaptureSystem.sln ./
 COPY ReceiptCapture.Core/ReceiptCapture.Core.csproj ReceiptCapture.Core/
 COPY ReceiptCapture.Data/ReceiptCapture.Data.csproj ReceiptCapture.Data/
-COPY ReceiptCapture.Api/ReceiptCapture.Api.csproj ReceiptCapture.Api/
+COPY ReceiptCapture.Bot/ReceiptCapture.Bot.csproj ReceiptCapture.Bot/
 
-RUN dotnet restore ReceiptCapture.Api/ReceiptCapture.Api.csproj
+RUN dotnet restore ReceiptCapture.Bot/ReceiptCapture.Bot.csproj
 
 COPY . .
 
-RUN dotnet publish ReceiptCapture.Api/ReceiptCapture.Api.csproj -c Release -o /app/publish --no-restore
+RUN dotnet publish ReceiptCapture.Bot/ReceiptCapture.Bot.csproj -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
@@ -20,8 +20,6 @@ USER appuser
 
 COPY --from=build /app/publish .
 
-EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
-ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_ENVIRONMENT=Production
 
-ENTRYPOINT ["dotnet", "ReceiptCapture.Api.dll"]
+ENTRYPOINT ["dotnet", "ReceiptCapture.Bot.dll"]
