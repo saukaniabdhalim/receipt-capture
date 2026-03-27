@@ -1,0 +1,10 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "ReceiptCapture.Api/Dockerfile"
+
+[deploy]
+startCommand = "dotnet ReceiptCapture.Api.dll"
+healthcheckPath = "/health"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

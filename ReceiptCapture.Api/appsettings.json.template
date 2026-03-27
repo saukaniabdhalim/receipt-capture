@@ -1,0 +1,21 @@
+﻿{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=YOUR-SUPABASE-HOST;Database=postgres;Username=postgres;Password=YOUR-PASSWORD;Port=5432;SslMode=Require;Trust Server Certificate=true;"
+  },
+  "Claude": {
+    "ApiKey": "YOUR-CLAUDE-API-KEY",
+    "Model": "claude-3-5-sonnet-20241022"
+  },
+  "Cloudinary": {
+    "CloudName": "YOUR-CLOUD-NAME",
+    "ApiKey": "YOUR-CLOUDINARY-KEY",
+    "ApiSecret": "YOUR-CLOUDINARY-SECRET"
+  }
+}
