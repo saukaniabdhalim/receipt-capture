@@ -3,7 +3,7 @@ namespace ReceiptCapture.Core.Services;
 
 public interface IReceiptService
 {
-    Task<ReceiptResult> CreateReceiptAsync(long telegramUserId, byte[] imageBytes, string fileId, string? caption, CancellationToken ct = default);
+    Task<ReceiptResult> CreateReceiptAsync(long telegramUserId, long? telegramChatId, string? chatType, byte[] imageBytes, string fileId, string? caption, CancellationToken ct = default);
     Task<ReceiptResult?> GetReceiptAsync(int receiptId, CancellationToken ct = default);
     Task<List<ReceiptResult>> GetUserReceiptsAsync(long telegramUserId, CancellationToken ct = default);
     Task<List<ReceiptResult>> GetReceiptsByDateRangeAsync(long telegramUserId, DateTime start, DateTime end, CancellationToken ct = default);

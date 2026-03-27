@@ -5,6 +5,7 @@ public class Receipt
 {
     public int ReceiptId { get; set; }
     public int UserId { get; set; }
+    public int? HouseholdId { get; set; }  // NEW: Which household it belongs to
     public int? CategoryId { get; set; }
 
     public string? MerchantName { get; set; }
@@ -27,6 +28,7 @@ public class Receipt
     public string? Notes { get; set; }
 
     public virtual User User { get; set; } = null!;
+    public virtual Household? Household { get; set; }  // NEW
     public virtual Category? Category { get; set; }
     public virtual ICollection<ReceiptItem> Items { get; set; } = [];
 }

@@ -20,7 +20,9 @@ public class User
 
     [StringLength(100)]
     public string? LastName { get; set; }
-
+    // NEW: Link to household
+    public int? HouseholdId { get; set; }
+    public virtual Household? Household { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
 
