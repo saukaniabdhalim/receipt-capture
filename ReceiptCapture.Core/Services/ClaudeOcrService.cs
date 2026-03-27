@@ -16,7 +16,7 @@ public class ClaudeOcrService : IOcrService
     private readonly string _model;
     private readonly ILogger<ClaudeOcrService>? _logger;
 
-    public ClaudeOcrService(string apiKey, string model = AnthropicModels.Claude45Sonnet, ILogger<ClaudeOcrService>? logger = null)
+    public ClaudeOcrService(string apiKey, string model = AnthropicModels.Claude46Sonnet, ILogger<ClaudeOcrService>? logger = null)
     {
         _client = new AnthropicClient(apiKey);
         _model = model;
