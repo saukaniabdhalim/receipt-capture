@@ -1,14 +1,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ReceiptCaptureSystem.sln ./
-COPY ReceiptCapture.Core/ReceiptCapture.Core.csproj ReceiptCapture.Core/
-COPY ReceiptCapture.Data/ReceiptCapture.Data.csproj ReceiptCapture.Data/
-COPY ReceiptCapture.Api/ReceiptCapture.Api.csproj ReceiptCapture.Api/
+COPY . .
 
 RUN dotnet restore ReceiptCapture.Api/ReceiptCapture.Api.csproj
-
-COPY . .
 
 RUN dotnet publish ReceiptCapture.Api/ReceiptCapture.Api.csproj -c Release -o /app/publish --no-restore
 
