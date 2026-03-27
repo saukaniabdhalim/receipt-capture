@@ -1,6 +1,6 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "ReceiptCapture.Api/Dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "dotnet ReceiptCapture.Api.dll"
