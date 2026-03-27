@@ -3,6 +3,8 @@ WORKDIR /src
 
 COPY . .
 
+RUN echo "=== /src contents ===" && ls -la /src && echo "=== looking for csproj ===" && find /src -name "*.csproj" 2>/dev/null
+
 RUN dotnet restore ReceiptCapture.Web/ReceiptCapture.Web.csproj
 
 RUN dotnet publish ReceiptCapture.Web/ReceiptCapture.Web.csproj -c Release -o /app/publish --no-restore
