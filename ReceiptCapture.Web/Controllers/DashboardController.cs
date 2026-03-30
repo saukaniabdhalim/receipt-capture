@@ -1,4 +1,4 @@
-﻿// Controllers/DashboardController.cs
+// Controllers/DashboardController.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReceiptCapture.Data;
@@ -61,20 +61,90 @@ public class DashboardController : Controller
 
             CategoryBreakdown = await _context.Receipts
                 .AsNoTracking()
-                .Where(r => r.UserId == user.UserId && r.ReceiptDate >= startOfMonth && r.CategoryId != null)
-                .GroupBy(r => r.Category!.Name)
+                .Where(r => r.UserId == user.UserId && r.ReceiptDate >= startOfMonth)
+                .GroupBy(r => r.CategoryId)
                 .Select(g => new CategoryStat
                 {
-                    Name = g.Key,
+                    Name = g.First().Category != null ? g.First().Category!.Name : "Uncategorized",
                     Amount = g.Sum(r => r.TotalAmount),
                     Count = g.Count(),
-                    Color = g.First().Category!.ColorCode ?? "#999"
+                    Color = g.First().Category != null ? (g.First().Category!.ColorCode ?? "#999") : "#B0B0B0"
                 })
                 .OrderByDescending(x => x.Amount)
                 .ToListAsync()
         };
 
         return View(model);
+    }
+
+    public async Task<IActionResult> MonthlyReport(long userId, int? year, int? month)
+    {
+        var targetYear = year ?? DateTime.UtcNow.Year;
+        var targetMonth = month ?? DateTime.UtcNow.Month;
+        var startOfMonth = new DateTime(targetYear, targetMonth, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.TelegramUserId == userId);
+        if (user == null) return NotFound();
+
+        var receipts = await _context.Receipts
+            .AsNoTracking()
+            .Where(r => r.UserId == user.UserId && r.ReceiptDate >= startOfMonth && r.ReceiptDate <= endOfMonth)
+            .Include(r => r.Category)
+            .OrderByDescending(r => r.ReceiptDate)
+            .ToListAsync();
+
+        var breakdown = receipts
+            .GroupBy(r => r.CategoryId)
+            .Select(g => new CategoryStat
+            {
+                Name = g.First().Category?.Name ?? "Uncategorized",
+                Amount = g.Sum(r => r.TotalAmount),
+                Count = g.Count(),
+                Color = g.First().Category?.ColorCode ?? "#B0B0B0"
+            })
+            .OrderByDescending(x => x.Amount)
+            .ToList();
+
+        ViewBag.UserId = userId;
+        ViewBag.UserName = $"{user.FirstName} {user.LastName}".Trim();
+        ViewBag.MonthName = startOfMonth.ToString("MMMM yyyy");
+        ViewBag.Year = targetYear;
+        ViewBag.Month = targetMonth;
+        ViewBag.Total = receipts.Sum(r => r.TotalAmount);
+        ViewBag.CategoryBreakdownJson = System.Text.Json.JsonSerializer.Serialize(breakdown);
+
+        return View(receipts);
+    }
+
+    public async Task<IActionResult> DailyReport(long userId, string? date)
+    {
+        DateTime targetDate;
+        if (!DateTime.TryParse(date, out targetDate))
+        {
+            targetDate = DateTime.UtcNow.Date;
+        }
+        else
+        {
+            targetDate = DateTime.SpecifyKind(targetDate, DateTimeKind.Utc).Date;
+        }
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.TelegramUserId == userId);
+        if (user == null) return NotFound();
+
+        var receipts = await _context.Receipts
+            .AsNoTracking()
+            .Where(r => r.UserId == user.UserId && r.ReceiptDate == targetDate)
+            .Include(r => r.Category)
+            .OrderByDescending(r => r.UploadedAt)
+            .ToListAsync();
+
+        ViewBag.UserId = userId;
+        ViewBag.UserName = $"{user.FirstName} {user.LastName}".Trim();
+        ViewBag.Date = targetDate;
+        ViewBag.Total = receipts.Sum(r => r.TotalAmount);
+
+        return View(receipts);
     }
 
     public async Task<IActionResult> AllReceipts(long userId)
@@ -91,73 +161,10 @@ public class DashboardController : Controller
 
         ViewBag.UserId = userId;
         ViewBag.UserName = $"{user.FirstName} {user.LastName}".Trim();
+
         return View(receipts);
     }
 
-    public async Task<IActionResult> MonthlyReport(long userId, int? year, int? month)
-    {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.TelegramUserId == userId);
-        if (user == null) return NotFound();
-
-        var now = DateTime.UtcNow;
-        year ??= now.Year;
-        month ??= now.Month;
-
-        var start = new DateTime(year.Value, month.Value, 1, 0, 0, 0, DateTimeKind.Utc);
-        var end = start.AddMonths(1);
-
-        var receipts = await _context.Receipts
-            .AsNoTracking()
-            .Where(r => r.UserId == user.UserId && r.ReceiptDate >= start && r.ReceiptDate < end)
-            .Include(r => r.Category)
-            .OrderByDescending(r => r.ReceiptDate)
-            .ToListAsync();
-
-        var byCategory = receipts
-            .GroupBy(r => r.Category?.Name ?? "Uncategorised")
-            .Select(g => new CategoryStat
-            {
-                Name = g.Key,
-                Amount = g.Sum(r => r.TotalAmount),
-                Count = g.Count(),
-                Color = g.First().Category?.ColorCode ?? "#999"
-            })
-            .OrderByDescending(x => x.Amount)
-            .ToList();
-
-        ViewBag.UserId = userId;
-        ViewBag.UserName = $"{user.FirstName} {user.LastName}".Trim();
-        ViewBag.Year = year.Value;
-        ViewBag.Month = month.Value;
-        ViewBag.MonthName = start.ToString("MMMM yyyy");
-        ViewBag.Total = receipts.Sum(r => r.TotalAmount);
-        ViewBag.CategoryBreakdownJson = System.Text.Json.JsonSerializer.Serialize(byCategory);
-        return View(receipts);
-    }
-
-    public async Task<IActionResult> DailyReport(long userId, string? date)
-    {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.TelegramUserId == userId);
-        if (user == null) return NotFound();
-
-        var day = date != null && DateTime.TryParse(date, out var parsed)
-            ? parsed.Date
-            : DateTime.UtcNow.Date;
-        var dayEnd = day.AddDays(1);
-
-        var receipts = await _context.Receipts
-            .AsNoTracking()
-            .Where(r => r.UserId == user.UserId && r.ReceiptDate >= day && r.ReceiptDate < dayEnd)
-            .Include(r => r.Category)
-            .OrderByDescending(r => r.ReceiptDate)
-            .ToListAsync();
-
-        ViewBag.UserId = userId;
-        ViewBag.UserName = $"{user.FirstName} {user.LastName}".Trim();
-        ViewBag.Date = day;
-        ViewBag.Total = receipts.Sum(r => r.TotalAmount);
-        return View(receipts);
-    }
 
     public class DashboardViewModel
     {
