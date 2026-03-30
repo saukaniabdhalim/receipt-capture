@@ -1,4 +1,4 @@
-﻿@* Views/Dashboard/Index.cshtml *@
+@* Views/Dashboard/Index.cshtml *@
 @model ReceiptCapture.Web.Controllers.DashboardController.DashboardViewModel
 <!DOCTYPE html>
 <html lang="en">
@@ -119,10 +119,10 @@
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: data.map(c => c.name),
+                labels: data.map(c => c.Name),
                 datasets: [{
-                    data: data.map(c => c.amount),
-                    backgroundColor: data.map(c => c.color),
+                    data: data.map(c => c.Amount),
+                    backgroundColor: data.map(c => c.Color),
                     borderWidth: 0,
                     hoverOffset: 4
                 }]
