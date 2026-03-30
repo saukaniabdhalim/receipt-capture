@@ -131,7 +131,7 @@ public class DashboardController : Controller
         ViewBag.Month = month.Value;
         ViewBag.MonthName = start.ToString("MMMM yyyy");
         ViewBag.Total = receipts.Sum(r => r.TotalAmount);
-        ViewBag.CategoryBreakdown = byCategory;
+        ViewBag.CategoryBreakdownJson = System.Text.Json.JsonSerializer.Serialize(byCategory);
         return View(receipts);
     }
 
