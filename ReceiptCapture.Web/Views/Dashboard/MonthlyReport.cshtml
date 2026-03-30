@@ -45,7 +45,7 @@
             <div class="col-md-4">
                 <div class="stat-card" style="background: linear-gradient(135deg,#667eea,#764ba2)">
                     <h6 class="mb-1 opacity-75">Total Spent</h6>
-                    <h3 class="mb-0">MYR @((decimal)ViewBag.Total).ToString("N2")</h3>
+                    <h3 class="mb-0">MYR @(((decimal)ViewBag.Total).ToString("N2"))</h3>
                 </div>
             </div>
             <div class="col-md-4">
@@ -57,7 +57,7 @@
             <div class="col-md-4">
                 <div class="stat-card" style="background: linear-gradient(135deg,#4facfe,#00f2fe)">
                     <h6 class="mb-1 opacity-75">Average per Receipt</h6>
-                    <h3 class="mb-0">MYR @(Model.Count > 0 ? ((decimal)ViewBag.Total / Model.Count) : 0m).ToString("N2")</h3>
+                    <h3 class="mb-0">MYR @((Model.Count > 0 ? ((decimal)ViewBag.Total / Model.Count) : 0m).ToString("N2"))</h3>
                 </div>
             </div>
         </div>
