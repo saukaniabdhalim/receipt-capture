@@ -80,6 +80,9 @@ Rules:
             var response = await _client.Messages.GetClaudeMessageAsync(parameters);
 
             var textContent = response.Content.OfType<TextContent>().FirstOrDefault();
+            Console.WriteLine("=== RAW CLAUDE RESPONSE ===");
+            Console.WriteLine(textContent?.Text ?? "NULL RESPONSE");
+            Console.WriteLine("===========================");
             if (textContent == null)
             {
                 return new OcrResult { Success = false, ErrorMessage = "No text response from Claude API" };
