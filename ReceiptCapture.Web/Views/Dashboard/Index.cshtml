@@ -47,8 +47,8 @@
             <div class="col-md-4">
                 <div class="stat-card info">
                     <h5 class="mb-3">Quick Actions</h5>
-                    <a href="#" class="btn btn-light btn-sm mb-2 w-100 fw-semibold">📊 Monthly Report</a>
-                    <a href="#" class="btn btn-light btn-sm w-100 fw-semibold">📅 Daily Report</a>
+                    <a href="@Url.Action("MonthlyReport", "Dashboard", new { userId = Model.UserId })" class="btn btn-light btn-sm mb-2 w-100 fw-semibold">📊 Monthly Report</a>
+                    <a href="@Url.Action("DailyReport", "Dashboard", new { userId = Model.UserId })" class="btn btn-light btn-sm w-100 fw-semibold">📅 Daily Report</a>
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@
                 <div class="card h-100">
                     <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 fw-bold">Recent Receipts</h5>
-                        <a href="#" class="btn btn-primary btn-sm">View All</a>
+                        <a href="@Url.Action("AllReceipts", "Dashboard", new { userId = Model.UserId })" class="btn btn-primary btn-sm">View All</a>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
