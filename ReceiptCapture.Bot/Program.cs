@@ -1,4 +1,4 @@
-﻿// ReceiptCapture.Bot/Program.cs - Fixed UpdateHandler
+// ReceiptCapture.Bot/Program.cs - Fixed UpdateHandler
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -240,27 +240,23 @@ public class UpdateHandler : IUpdateHandler
                     : $"✅ Receipt saved for @{message.From?.Username ?? message.From?.FirstName}!\n\n🏪 {result.MerchantName}\n💰 MYR {result.TotalAmount:N2}\n📅 {result.ReceiptDate:dd/MM/yyyy}";
 
                 var buttons = new InlineKeyboardMarkup([
-    [
-        InlineKeyboardButton.WithCallbackData("🍽️ Food & Dining",  $"cat_{result.ReceiptId}_1"),
-        InlineKeyboardButton.WithCallbackData("🛒 Groceries",       $"cat_{result.ReceiptId}_2")
-    ],
-    [
-        InlineKeyboardButton.WithCallbackData("🚗 Transport",       $"cat_{result.ReceiptId}_3"),
-        InlineKeyboardButton.WithCallbackData("🛍️ Shopping",        $"cat_{result.ReceiptId}_4")
-    ],
-    [
-        InlineKeyboardButton.WithCallbackData("💊 Health",          $"cat_{result.ReceiptId}_5"),
-        InlineKeyboardButton.WithCallbackData("💡 Utilities",       $"cat_{result.ReceiptId}_6")
-    ],
-    [
-        InlineKeyboardButton.WithCallbackData("🎓 Education",       $"cat_{result.ReceiptId}_7"),
-        InlineKeyboardButton.WithCallbackData("🎮 Entertainment",   $"cat_{result.ReceiptId}_8")
-    ],
-    [
-        InlineKeyboardButton.WithCallbackData("🕌 Zakat/Sadaqah",  $"cat_{result.ReceiptId}_9"),
-        InlineKeyboardButton.WithCallbackData("📦 Others",          $"cat_{result.ReceiptId}_10")
-    ]
-]);
+                    [
+                        InlineKeyboardButton.WithCallbackData("🍽️ Food & Dining",  $"cat_{result.ReceiptId}_1"),
+                        InlineKeyboardButton.WithCallbackData("🚗 Transport",       $"cat_{result.ReceiptId}_2")
+                    ],
+                    [
+                        InlineKeyboardButton.WithCallbackData("🛍️ Shopping",        $"cat_{result.ReceiptId}_3"),
+                        InlineKeyboardButton.WithCallbackData("🎮 Entertainment",   $"cat_{result.ReceiptId}_4")
+                    ],
+                    [
+                        InlineKeyboardButton.WithCallbackData("💡 Utilities",       $"cat_{result.ReceiptId}_5"),
+                        InlineKeyboardButton.WithCallbackData("💊 Healthcare",      $"cat_{result.ReceiptId}_6")
+                    ],
+                    [
+                        InlineKeyboardButton.WithCallbackData("🎓 Education",       $"cat_{result.ReceiptId}_7"),
+                        InlineKeyboardButton.WithCallbackData("📦 Others",          $"cat_{result.ReceiptId}_8")
+                    ]
+                ]);
 
                 await bot.SendMessage(
                     chatId,
