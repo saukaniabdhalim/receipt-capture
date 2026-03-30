@@ -48,11 +48,25 @@ try
     services.AddDbContext<ReceiptContext>(options =>
         options.UseNpgsql(connectionString));
 
-    services.AddSingleton<IOcrService>(sp =>
+    //services.AddSingleton<IOcrService>(sp =>
+    //    new ClaudeOcrService(
+    //        configuration["Claude:ApiKey"]!,
+    //        configuration["Claude:Model"] ?? Anthropic.SDK.Constants.AnthropicModels.Claude45Haiku,
+    //        sp.GetService<ILogger<ClaudeOcrService>>()));
+    // 1. Register the concrete Claude implementation
+
+    services.AddSingleton<ClaudeOcrService>(sp =>
         new ClaudeOcrService(
             configuration["Claude:ApiKey"]!,
-            configuration["Claude:Model"] ?? Anthropic.SDK.Constants.AnthropicModels.Claude46Sonnet,
-            sp.GetService<ILogger<ClaudeOcrService>>()));
+            configuration["Claude:Model"] ?? Anthropic.SDK.Constants.AnthropicModels.Claude45Haiku,
+            sp.GetRequiredService<ILogger<ClaudeOcrService>>()));
+
+    // 2. Register the concrete Gemini implementation (the fallback)
+    services.AddSingleton<GeminiOcrService>(sp =>
+        new GeminiOcrService(
+            configuration["Gemini:ApiKey"]!,
+            "Gemini3Flash",
+            sp.GetRequiredService<ILogger<GeminiOcrService>>()));
 
     services.AddSingleton(new CloudinaryService(
         configuration["Cloudinary:CloudName"]!,

@@ -2,6 +2,7 @@
 using ReceiptCapture.Core.Services;
 using ReceiptCapture.Data;
 using Microsoft.EntityFrameworkCore;
+using Mscc.GenerativeAI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,11 +22,28 @@ builder.Services.AddDbContext<ReceiptContext>((serviceProvider, options) =>
 });
 
 // Application Services
-builder.Services.AddSingleton<IOcrService>(sp =>
+//builder.Services.AddSingleton<IOcrService>(sp =>
+//    new ClaudeOcrService(
+//        builder.Configuration["Claude:ApiKey"]!,
+//        builder.Configuration["Claude:Model"] ?? Anthropic.SDK.Constants.AnthropicModels.Claude46Sonnet,
+//        sp.GetService<ILogger<ClaudeOcrService>>()));
+// 1. Register the concrete Claude implementation
+builder.Services.AddSingleton<ClaudeOcrService>(sp =>
     new ClaudeOcrService(
         builder.Configuration["Claude:ApiKey"]!,
-        builder.Configuration["Claude:Model"] ?? Anthropic.SDK.Constants.AnthropicModels.Claude46Sonnet,
-        sp.GetService<ILogger<ClaudeOcrService>>()));
+        builder.Configuration["Claude:Model"] ?? Anthropic.SDK.Constants.AnthropicModels.Claude45Haiku,
+        sp.GetRequiredService<ILogger<ClaudeOcrService>>()));
+
+// 2. Register the concrete Gemini implementation (the fallback)
+builder.Services.AddSingleton<GeminiOcrService>(sp =>
+    new GeminiOcrService(
+        builder.Configuration["Gemini:ApiKey"]!,
+        "Gemini3Flash",
+        sp.GetRequiredService<ILogger<GeminiOcrService>>()));
+
+// 3. Register IOcrService to use the Fallback wrapper
+// This will automatically inject Claude and Gemini into the FallbackOcrService
+builder.Services.AddSingleton<IOcrService, FallbackOcrService>();
 
 builder.Services.AddSingleton(sp =>
     new CloudinaryService(
