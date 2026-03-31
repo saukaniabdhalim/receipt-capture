@@ -22,7 +22,7 @@
 
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold mb-0">📅 Daily Report — @((DateTime)ViewBag.Date).ToString("dd MMMM yyyy")</h4>
+            <h4 class="fw-bold mb-0">📅 Daily Report — @((DateTime)ViewBag.Date)</h4>
             <a href="@Url.Action("Index", "Dashboard", new { userId = ViewBag.UserId })" class="btn btn-outline-secondary btn-sm">← Back</a>
         </div>
 
