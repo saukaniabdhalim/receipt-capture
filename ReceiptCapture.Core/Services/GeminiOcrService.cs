@@ -12,9 +12,19 @@ public class GeminiOcrService : IOcrService
     private readonly GenerativeModel _model;
     private readonly ILogger<GeminiOcrService>? _logger;
 
-    public GeminiOcrService(string apiKey, string modelName = Model.Gemini3Flash, ILogger<GeminiOcrService>? logger = null)
+    public GeminiOcrService(string apiKey, string modelName = Model.Gemini25Flash, ILogger<GeminiOcrService>? logger = null)
     {
-        _googleAI = new GoogleAI(apiKey);
+        //_googleAI = new GoogleAI(apiKey);
+        //_model = _googleAI.GenerativeModel(modelName);
+        //_logger = logger;
+        _googleAI = new GoogleAI(apiKey);       
+
+        // Ensure the model name starts with "models/"
+        if (!modelName.StartsWith("models/"))
+        {
+            modelName = $"models/{modelName}";
+        }
+
         _model = _googleAI.GenerativeModel(modelName);
         _logger = logger;
     }
@@ -23,7 +33,13 @@ public class GeminiOcrService : IOcrService
     {
         return ProcessImageAsync(imageBytes).GetAwaiter().GetResult();
     }
-
+    //public async Task<IEnumerable<string>> ListAvailableModelsAsync()
+    //{
+    //    var models = await _googleAI.GetModel() .ListModels();
+    //    return models
+    //        .Where(m => m.SupportedGenerationMethods?.Contains("generateContent") == true)
+    //        .Select(m => m.Name);
+    //}
     public async Task<OcrResult> ProcessImageAsync(byte[] imageBytes)
     {
         try
