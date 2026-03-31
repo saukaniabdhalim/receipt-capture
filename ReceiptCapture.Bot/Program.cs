@@ -65,7 +65,7 @@ try
     services.AddSingleton<GeminiOcrService>(sp =>
         new GeminiOcrService(
             configuration["Gemini:ApiKey"]!,
-            "Gemini3Flash",
+            "Gemini25Flash",
             sp.GetRequiredService<ILogger<GeminiOcrService>>()));
     // 3. Register IOcrService to use the Fallback wrapper
     // This will automatically inject Claude and Gemini into the FallbackOcrService
