@@ -38,7 +38,7 @@ builder.Services.AddSingleton<ClaudeOcrService>(sp =>
 builder.Services.AddSingleton<GeminiOcrService>(sp =>
     new GeminiOcrService(
         builder.Configuration["Gemini:ApiKey"]!,
-        "Gemini25Flash",
+        "gemini-2.5-flash",
         sp.GetRequiredService<ILogger<GeminiOcrService>>()));
 
 // 3. Register IOcrService to use the Fallback wrapper

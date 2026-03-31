@@ -17,8 +17,7 @@ public class GeminiOcrService : IOcrService
         //_googleAI = new GoogleAI(apiKey);
         //_model = _googleAI.GenerativeModel(modelName);
         //_logger = logger;
-        _googleAI = new GoogleAI(apiKey);       
-
+        _googleAI = new GoogleAI(apiKey);
         // Ensure the model name starts with "models/"
         if (!modelName.StartsWith("models/"))
         {
